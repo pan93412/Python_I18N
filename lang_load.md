@@ -1,40 +1,19 @@
-# Python I18N 簡易元件
-author = pan93412
+# Python I18N 簡易模組
+gettext 的設定十分繁瑣，對於一些小型專案來說實在沒有必要，希望這個簡單的 I18N 模組能讓你的程式能真正 I18N 化。
 
-## 初始化
-在 python 程式碼內插入這一段，或是建立一個檔案後
-用 `from 檔案 import i18nfunc`。
+## 初始化模組
+1. 從 Git 庫下載 lang_load.py，並放置於您程式的根目錄。
+2. 確定放置完成後，在程式碼最上方插入以下的程式碼即可。
 
-```
-import os
-class i18nfunc:
-    '''i18n 函式'''
-    def __init__(self, origlang, langfile=False):
-        '''透過 i18nfunc(原始語言檔案, 翻譯語言檔案) 初始化 i18n'''
-        if os.path.exists(origlang):
-            exec("import " + origlang[:-3] + " as lango")
-            self.module = locals()['lango']
-        else:
-            print("DEBUG: origlang is invaild!")
-        if langfile != False:
-            if os.path.exists(langfile):
-                exec("import " + langfile[:-3] + " as langf")
-                self.langmod = locals()['langf']
-            else:
-                print("DEBUG: langfile is invaild!")
-    def str(self, strid):
-        '''載入語言檔案中相對應的字串'''
-        try:
-            return eval("self.langmod." + strid)
-        except:
-            return eval("self.module." + strid)
-```
+   ```
+   from lang_load import i18nfunc
+   ```
 
 ## 說明
 ### 初始化
-輸入 `i18n = i18nfunc("原始語系檔名", "翻譯語系檔名")` 即完成初始化作業。
+插入 `i18n = i18nfunc("原始語系檔名", "翻譯語系檔名")` 即完成初始化作業。
 
-> Tip: 可以不放「翻譯語系檔名」，代表著始終使用原始語系。
+> 可以不放「翻譯語系檔名」，代表著始終使用原始語系。
 
 ### 語系檔案
 語系檔案須以 .py 為副檔名。
@@ -61,7 +40,7 @@ helloworld = "哈囉！世界。"
 那就輸入 i18n.str("helloworld")，
 其就會回傳 helloworld 的字串檔案。
 
-### 原則
+### i18n 工具邏輯原則
 - 先抓翻譯語系檔案，再抓原始語系檔案
 - 如果翻譯語系檔案沒有某字串，那就會採用原始語系的字串。
 
@@ -69,36 +48,12 @@ helloworld = "哈囉！世界。"
 假設原始語系檔名為 original_lang.py，翻譯成中文的語系檔案是
 chinese_lang.py。
 
-main.py：
+`main.py`：
 
 ```
 #!/bin/python3
 #-*- coding: utf-8 -*-
-
-# i18n 函式
-import os
-
-class i18nfunc:
-    '''i18n 函式'''
-    def __init__(self, origlang, langfile=False):
-        '''透過 i18nfunc(原始語言檔案, 翻譯語言檔案) 初始化 i18n'''
-        if os.path.exists(origlang):
-            exec("import " + origlang[:-3] + " as lango")
-            self.module = locals()['lango']
-        else:
-            print("DEBUG: origlang is invaild!")
-        if langfile != False:
-            if os.path.exists(langfile):
-                exec("import " + langfile[:-3] + " as langf")
-                self.langmod = locals()['langf']
-            else:
-                print("DEBUG: langfile is invaild!")
-    def str(self, strid):
-        '''載入語言檔案中相對應的字串'''
-        try:
-            return eval("self.langmod." + strid)
-        except:
-            return eval("self.module." + strid)
+from lang_load import i18nfunc
 
 i18n = i18nfunc("original_lang.py", "chinese_lang.py")
 
@@ -107,7 +62,7 @@ print(i18n.str("helloworld"))
 print(i18n.str("whatsup"))
 ```
 
-original_lang.py：
+`original_lang.py`：
 
 ```
 # Original Language File
@@ -115,14 +70,14 @@ helloworld = "Hello World!"
 whatsup = "What's up?"
 ```
 
-chinese_lang.py：
+`chinese_lang.py`：
 
 ```
 # Chinese LangFile
 helloworld = "哈囉世界！"
 ```
 
-結果：
+執行結果：
 
 ```
 哈囉世界！
